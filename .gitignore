@@ -1,0 +1,27 @@
+# Java / Maven
+backend/target/
+*.class
+
+# Node / Vite
+frontend/node_modules/
+frontend/dist/
+*.tsbuildinfo
+
+# Logs
+*.log
+logs/
+
+# Local env / secrets
+.env
+.env.*
+*.local
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Tooling / session artifacts
+es_*
+opencode session*
