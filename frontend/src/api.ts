@@ -1,4 +1,4 @@
-const API_BASE = '/api';
+const API_BASE = (import.meta.env.VITE_API_URL ?? '/api').replace(/\/+$/, '');
 const TOKEN_KEY = 'securebank_token';
 const USER_KEY = 'securebank_user';
 const ROLE_KEY = 'securebank_role';
@@ -85,10 +85,22 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   });
 
   const text = await response.text();
-  const data = text ? JSON.parse(text) : null;
+  let data: unknown = null;
+
+  if (text) {
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error(
+        `API returned ${response.status} with a non-JSON response. ` +
+          'Set VITE_API_URL to your deployed backend URL (including /api) and redeploy.'
+      );
+    }
+  }
 
   if (!response.ok) {
-    const message = data?.message ?? `Request failed (${response.status})`;
+    const message =
+      (data as { message?: string } | null)?.message ?? `Request failed (${response.status})`;
     throw new Error(message);
   }
 
